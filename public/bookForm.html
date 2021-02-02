@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Form</title>
+</head>
+<body>
+    <h1>Adding New Book</h1>
+    <form method="POST" id="bookForm"
+        action="http://localhost:5000/book"
+        onsubmit="window.open('http://localhost:5000/')">
+
+        <input type="hidden" id="id" name="id" value="">
+        <table border="1">
+            <tr>
+                <th>Particular</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Book Name</td>
+                <td><input type="text" name="name"</td>
+            </tr>
+            <tr>
+                <td>Book Author</td>
+                <td><input type="text" name="author"></td>
+            </tr>
+            <tr>
+                <td>Book Genre</td>
+                <td>
+                    <select name="genre">
+                        <option value="">Select</option>
+                        <option value="programming">Prgramming</option>
+                        <option value="fiction">Fiction</option>
+                        <option value="story">Story</option>
+                        <option value="reference">Reference</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Publication Year</td>
+                <td>
+                    <select name="pubyear">
+                        <option value="">Select</option>
+                        <option value="1990">1990</option>
+                        <option value="1991">1991</option>
+                        <option value="1992">1992</option>
+                        <option value="1993">1993</option>
+                        <option value="1994">1994</option>
+                        <option value="1995">1995</option>
+                        <option value="1996">1996</option>
+                        <option value="1997">1997</option>
+                        <option value="1998">1998</option>
+                        <option value="1999">1999</option>
+                        <option value="2000">2000</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" id="submit" value="Add">
+                </td>
+            </tr>
+        </table>
+    </form>
+    
+    <script>
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const inputId = urlParams.get('id');
+
+        if(inputId) {
+            console.log(inputId)
+            fetch("http://localhost:5000/book/" + inputId)
+                .then (response => {
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data)
+                    updateData(data);
+                })
+                .catch(err => console.log("Error: ", err))
+        }
+        function updateData (data) {
+            var bookName = document.getElementsByName("name");
+            bookName[0].value = data.name;
+
+            var bookAuthor = document.getElementsByName("author");
+            bookAuthor[0].value = data.author;
+
+            var bookGenre = document.getElementsByName("genre");
+            bookGenre[0].value = data.genre;
+
+            var pubYear = document.getElementsByName("pubyear");
+            pubYear[0].value = data.pubyear;
+
+            var bookId = document.getElementById("id");
+            bookId.value = inputId;
+
+            var submit = document.getElementById("submit");
+            submit.value = "Update";
+        }
+    </script>
+</body>
+</html>

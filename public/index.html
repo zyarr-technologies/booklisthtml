@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Application</title>
+</head>
+<body>
+    <h1>Welcome to Library Application</h1>
+    <a href="http://localhost:5000/bookForm.html">Add Book</a>
+    
+    <table border="1" id="displaySection">
+        <tr>
+            <th>BookName</th>
+            <th>BookAuthor</th>
+            <th>Genre</th>
+            <th>PubYear</th>
+            <th colspan="2">Operations</th>
+        </tr>
+    </table>
+    <script>
+        fetch("http://localhost:5000/book")
+            .then((response) => {
+                return response.json();
+            })
+            .then(data => {
+                display(data);
+            })
+            .catch(err => {
+                console.log("error:", err)
+            })
+        function display(data) {
+            var elemTable = document.getElementById("displaySection");
+
+            for(var key in data) {
+                var tableRow = '<tr>' +
+                    '<td>' + data[key].name + '</td>' +
+                    '<td>' + data[key].author + '</td>' +
+                    '<td>' + data[key].genre + '</td>' +
+                    '<td>' + data[key].pubyear + '</td>' +
+                    '<td> <a href="http://localhost:5000/bookForm.html?id= ' + key + '">Edit</a></td>' +
+                    '<td> <a href=""onclick="deleteData(' + key + ')">Del </a> </td>' +
+                    '</tr>'
+                    if(elemTable.innerHTML) {
+                        elemTable.innerHTML +=tableRow
+                    }else {
+                        elemTable.innerHTML = tableRow
+                    }
+            }
+        }
+        function deleteData(objectId){
+            fetch("http://localhost:5000/book/" + objectId, {method:'DELETE'})
+               .then(response => {
+                   return false;
+               })
+               .catch(err => {
+                   console.log('Error:',err)
+               })
+        }
+    </script>
+</body>
+</html>
